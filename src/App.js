@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
 import React from "react";
-import Board from "./bingo-game/Board";
+import Home from './bingo-game/Home/Home';
 
 function App() {
   return (
@@ -11,10 +10,9 @@ function App() {
           Buzzword Bingo
         </p>
       </header>
-      <div className="game-board">
-        <Board />
+      <div>
+        <Home/>
       </div>
-
     </div>
   );
 }

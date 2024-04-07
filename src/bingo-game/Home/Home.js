@@ -1,5 +1,7 @@
 import React from "react";
 import Board from "../Board/Board";
+import Dictionary from '../Dictionary';
+import { FaPlay, FaForward, FaRedoAlt } from 'react-icons/fa';
 import './Home.css';
 
 class Home extends React.Component {
@@ -8,6 +10,9 @@ class Home extends React.Component {
         this.state = {
             numPlayers: 2, // Default (min) number of players possible
             gameStarted: false,
+            gameEnded:false,
+            word: "",
+            indices:[]
         };
     }
 
@@ -20,12 +25,48 @@ class Home extends React.Component {
         }
     }
 
+    handleStartBtn = () => {
+        this.setState({ gameStarted: true });
+        this.generateRandWord();
+    }
+
+    handleNextWordBtn = () => {
+        this.generateRandWord();
+    }
+
+    handleGameEnd = () => {
+        this.setState({gameEnded: true});
+    }
+
+    generateRandWord = () => {
+        const dictionaryCopy = [...Dictionary];
+        const indices = this.state.indices;
+
+        let randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
+        
+        //generating a unique random index
+        while(indices.includes(randomIndex))
+        {
+            randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
+        }
+        const newIndices = [...indices, randomIndex];
+        this.setState({ indices: newIndices });
+        
+        const word = dictionaryCopy[randomIndex];
+        this.setState({ word: word});
+    }
+
     render() {
         const { numPlayers } = this.state;
+        const { gameStarted } = this.state;
+        const { gameEnded } = this.state;
+        const { word } = this.state;
 
         // Generate an array of player numbers based on numPlayers
-        const playerNumbers = Array.from({ length: numPlayers }, (_, index) => index + 1);
-
+        const playerNumbers = [];
+        for (let i = 1; i <= numPlayers; i++) {
+            playerNumbers.push(i);
+        }
         //dynamic grid template
         let gridTemplateColumns;
         let gridTemplateRows;
@@ -43,26 +84,47 @@ class Home extends React.Component {
         return(
             <div>
                 <div className="menu-bar row">
-                    <div className="input-group flex-nowrap col">
-                        <label className="player-label">Number of players: </label>
-                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} />
+                    <div className="input-group col input-group-custom">
+                        <span className="player-label">Number of players: </span>
+                        <input className="player-input rounded form-control" placeholder="Enter a number" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={gameStarted}/>
                     </div>
-                    <div className="col">
-                        <button className="btn btn-primary custom-btn">
-                            Start
-                        </button>
+                    <div className="col-auto row">
+                        <div className="col">
+                            <button className="btn btn-primary custom-btn" onClick={this.handleNextWordBtn} disabled={!gameStarted}>
+                                <FaForward size={15} className="icon-style" />
+                                Generate Next Word
+                            </button>
+                        </div>
+
+                        <div className="col">
+                            <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={gameStarted}>
+                                <FaPlay size={15} className="icon-style" />
+                                Start Game
+                            </button>
+                        </div>
+                        
+                        <div className="col">
+                            <button className="btn btn-warning custom-btn" onClick={() => window.location.reload()}>
+                                <FaRedoAlt size={15} className="icon-style" />
+                                Restart
+                            </button>
+                        </div>
                     </div>
-                    <div className="col">
-                        <button className="btn btn-warning custom-btn" onClick={() => window.location.reload()}>
-                            Restart
-                        </button>
-                    </div>
+                    
                 </div>
-               
+
+               <div className="game-bar row">
+                <label className="word-display">{word}</label>
+               </div>
                 
                 <div style={{ display: 'grid', gridTemplateRows, gridTemplateColumns }}>
                     {playerNumbers.map(playerNumber => (
-                        <Board key={playerNumber} playerNumber={playerNumber} style={{ width: '100%', height: '100%' }}/>
+                        <Board playerNumber={playerNumber} 
+                                gameStarted={gameStarted} 
+                                gameEnded={gameEnded}
+                                onGameEnd={this.handleGameEnd}
+                                word={word}
+                                style={{ width: '100%', height: '100%' }}/>
                     ))}
                 </div>
                 

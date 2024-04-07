@@ -38,6 +38,8 @@
 }
 
 .square {
-  height: 14vh;
-  width: 14vh;
+  height: 12vh;
+  width: 12vh;
+  font-size: 8px !important;
 }
+

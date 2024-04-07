@@ -1,6 +1,15 @@
 .menu-bar{
     align-items: center;
     display: flex;
+    background-color: #52555c;
+    color: white;
+}
+
+.game-bar{
+  align-items: center;
+  display: flex;
+  margin: 10px;
+  justify-content: center;
 }
 
 .custom-btn{
@@ -9,6 +18,8 @@
     text-align: center !important;
     align-items: center;
     display: flex;
+    justify-content: right;
+    white-space: nowrap;
 }
 
 .player-label{
@@ -17,7 +28,26 @@
   font-weight: bold;
 }
 
+.input-group-custom{
+  align-items: center;
+}
+
 .player-input{
-  margin: 5px;
+  margin-left: 50px;
+  margin-top: 5px;;
+  margin-bottom: 5px;
   font-size: 12px !important;
+  max-width: 200px;
+}
+
+.word-display{
+  background-color: #9e5dab;
+  border-radius: 10px;
+  color: white;
+  width:auto;
+  margin: 0px !important;
+}
+
+.icon-style{
+  margin: 5px;
 }
