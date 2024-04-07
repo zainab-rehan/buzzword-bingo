@@ -1,6 +1,15 @@
 .menu-bar{
     align-items: center;
     display: flex;
+    background-color: #52555c;
+    color: white;
+}
+
+.game-bar{
+  align-items: center;
+  display: flex;
+  background-color: #7a7e87;
+  color: white;
 }
 
 .custom-btn{
@@ -9,6 +18,7 @@
     text-align: center !important;
     align-items: center;
     display: flex;
+    justify-content: right;
 }
 
 .player-label{

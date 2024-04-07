@@ -1,5 +1,6 @@
 import React from "react";
 import Board from "../Board/Board";
+import Dictionary from '../Dictionary';
 import './Home.css';
 
 class Home extends React.Component {
@@ -8,6 +9,7 @@ class Home extends React.Component {
         this.state = {
             numPlayers: 2, // Default (min) number of players possible
             gameStarted: false,
+            word: "",
         };
     }
 
@@ -21,12 +23,29 @@ class Home extends React.Component {
     }
 
     handleStartBtn = (event) => {
-        this.setState({ gameStarted: true });
+        this.setState({ gameStarted: true }, () => {
+            // Callback function to execute after state is updated
+            console.log("gameStarted state updated:", this.state.gameStarted);
+        });
+        this.generateRandWord();
+    }
+
+    handleNextWordBtn = (event) => {
+        this.generateRandWord();
+    }
+
+    generateRandWord = () => {
+        const dictionaryCopy = [...Dictionary]
+        const randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
+        const word = dictionaryCopy.splice(randomIndex, 1)[0];
+        this.setState({ word: word});
     }
 
     render() {
         const { numPlayers } = this.state;
-
+        const { gameStarted } = this.state;
+        const { word } = this.state;
+        
         // Generate an array of player numbers based on numPlayers
         const playerNumbers = Array.from({ length: numPlayers }, (_, index) => index + 1);
 
@@ -49,24 +68,41 @@ class Home extends React.Component {
                 <div className="menu-bar row">
                     <div className="input-group flex-nowrap col">
                         <label className="player-label">Number of players: </label>
-                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={this.state.gameStarted}/>
+                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={gameStarted}/>
                     </div>
-                    <div className="col">
-                        <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={this.state.gameStarted}>
-                            Start
-                        </button>
+                    <div className="col-auto row">
+                        <div className="col">
+                            <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={gameStarted}>
+                                Start
+                            </button>
+                        </div>
+                        <div className="col">
+                            <button className="btn btn-warning custom-btn" onClick={() => window.location.reload()}>
+                                Restart
+                            </button>
+                        </div>
                     </div>
-                    <div className="col">
-                        <button className="btn btn-warning custom-btn" onClick={() => window.location.reload()}>
-                            Restart
-                        </button>
-                    </div>
+                    
                 </div>
-               
+
+               <div className="game-bar row">
+                <div className="word-display col">
+                    <label>{word}</label>
+                </div>
+                <div className="word-gen col">
+                    <button className="btn btn-primary custom-btn" onClick={this.handleNextWordBtn} disabled={!gameStarted}>
+                        Next Word
+                    </button>
+                </div>
+               </div>
                 
                 <div style={{ display: 'grid', gridTemplateRows, gridTemplateColumns }}>
                     {playerNumbers.map(playerNumber => (
-                        <Board key={playerNumber} playerNumber={playerNumber} style={{ width: '100%', height: '100%' }}/>
+                        <Board key={playerNumber} 
+                                playerNumber={playerNumber} 
+                                gameStarted={gameStarted} 
+                                word={word}
+                                style={{ width: '100%', height: '100%' }}/>
                     ))}
                 </div>
                 
