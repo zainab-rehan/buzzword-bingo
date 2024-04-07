@@ -1,0 +1,20 @@
+
+.square.clicked {
+    background-color: #2196f3 !important; /* Blue color for clicked squares */
+    color: white;
+}
+
+.square.winner {
+    background-color: #4caf50 !important; /* Green color for winning squares */
+    color: white;
+}
+
+.square.clicked:disabled {
+    background-color: #2196f3 !important; /* Blue color for clicked squares */
+    color: white;
+}
+
+.square.winner:disabled {
+    background-color: #4caf50 !important; /* Green color for winning squares */
+    color: white;
+}
