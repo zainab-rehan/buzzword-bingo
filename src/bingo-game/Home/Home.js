@@ -20,6 +20,10 @@ class Home extends React.Component {
         }
     }
 
+    handleStartBtn = (event) => {
+        this.setState({ gameStarted: true });
+    }
+
     render() {
         const { numPlayers } = this.state;
 
@@ -45,10 +49,10 @@ class Home extends React.Component {
                 <div className="menu-bar row">
                     <div className="input-group flex-nowrap col">
                         <label className="player-label">Number of players: </label>
-                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} />
+                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={this.state.gameStarted}/>
                     </div>
                     <div className="col">
-                        <button className="btn btn-primary custom-btn">
+                        <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={this.state.gameStarted}>
                             Start
                         </button>
                     </div>
