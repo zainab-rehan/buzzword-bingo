@@ -4,19 +4,12 @@ import './Square.css';
 
 class Square extends React.Component {
     render() {
-        /*return (
-            <Button
-                className="square"
-                onClick={() => this.props.onClick()}
-                variant={this.props.value ? "contained":"outlined"}
-            >
-                "word"
-            </Button>
-        );*/
-        const { value, onClick, word, className } = this.props;
-        //console.log(value);
-        //console.log(onClick);
-        //console.log(className);
+        //const { value, onClick, word, className } = this.props;
+        
+        const value = this.props.value;
+        const onClick = this.props.onClick;
+        const word = this.props.word;
+        const className = this.props.className;
         return (
             <Button
             className={className}

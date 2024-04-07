@@ -1,6 +1,7 @@
 import React from "react";
 import Square from "../Square/Square";
 import Dictionary from '../Dictionary';
+import { FaUser } from 'react-icons/fa';
 import './Board.css';
 
 class Board extends React.Component {
@@ -27,15 +28,14 @@ class Board extends React.Component {
     handleClick(index) {
         if (!this.props.gameStarted || this.props.gameEnded) {
             // If the game has not yet started or has ended, do not handle further clicks
-            console.log("game ended");
             return;
         }
         this.setState(prevState => {
             const squares = [...prevState.squares];
-            /*if (squares[i].word !== this.props.word) {
+            if (squares[index].word !== this.props.word) {
                 // If the clicked word doesnot match the word generator, do not handle further clicks
                 return;
-            }*/
+            }
             squares[index] = { ...squares[index], clicked: !squares[index].clicked };
             const winningLine = this.checkForBingo(squares);
 
@@ -68,7 +68,6 @@ class Board extends React.Component {
         }
         return (
             <Square
-                key={index}
                 value={this.state.squares[index]}
                 word={square.word}
                 onClick={() => this.handleClick(index)}
@@ -77,7 +76,7 @@ class Board extends React.Component {
         );
     }
 
-    //function to check for bingo
+    //function to check for bingo on click event
     checkForBingo(squares) {
         const size = Math.sqrt(squares.length);
         
@@ -144,7 +143,12 @@ class Board extends React.Component {
                     {this.state.gameEnded && <h1 className="bingo-heading">BINGO!</h1>}
                 </div>
                 <div>
-                    {!this.state.gameEnded && <h1>{"Player "+this.state.player}</h1>}
+                    {!this.state.gameEnded && 
+                        <div>
+                            <FaUser size={20} style={{ margin: '5px' }}/> 
+                            <span>{"Player "+this.state.player}</span>
+                        </div>
+                    }
                 </div>
                 <div>
                     {rows}

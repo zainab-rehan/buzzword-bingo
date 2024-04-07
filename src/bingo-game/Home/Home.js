@@ -1,6 +1,7 @@
 import React from "react";
 import Board from "../Board/Board";
 import Dictionary from '../Dictionary';
+import { FaPlay, FaForward, FaRedoAlt } from 'react-icons/fa';
 import './Home.css';
 
 class Home extends React.Component {
@@ -62,7 +63,6 @@ class Home extends React.Component {
         const { word } = this.state;
 
         // Generate an array of player numbers based on numPlayers
-        //const playerNumbers = Array.from({ length: numPlayers }, (_, index) => index + 1);
         const playerNumbers = [];
         for (let i = 1; i <= numPlayers; i++) {
             playerNumbers.push(i);
@@ -84,23 +84,28 @@ class Home extends React.Component {
         return(
             <div>
                 <div className="menu-bar row">
-                    <div className="input-group col">
-                        <label className="player-label">Number of players: </label>
-                        <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={gameStarted}/>
+                    <div className="input-group col input-group-custom">
+                        <span className="player-label">Number of players: </span>
+                        <input className="player-input rounded form-control" placeholder="Enter a number" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={gameStarted}/>
                     </div>
                     <div className="col-auto row">
                         <div className="col">
-                            <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={gameStarted}>
-                                Start Game
-                            </button>
-                        </div>
-                        <div className="word-gen col">
                             <button className="btn btn-primary custom-btn" onClick={this.handleNextWordBtn} disabled={!gameStarted}>
+                                <FaForward size={15} className="icon-style" />
                                 Generate Next Word
                             </button>
                         </div>
+
+                        <div className="col">
+                            <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={gameStarted}>
+                                <FaPlay size={15} className="icon-style" />
+                                Start Game
+                            </button>
+                        </div>
+                        
                         <div className="col">
                             <button className="btn btn-warning custom-btn" onClick={() => window.location.reload()}>
+                                <FaRedoAlt size={15} className="icon-style" />
                                 Restart
                             </button>
                         </div>
@@ -114,8 +119,7 @@ class Home extends React.Component {
                 
                 <div style={{ display: 'grid', gridTemplateRows, gridTemplateColumns }}>
                     {playerNumbers.map(playerNumber => (
-                        <Board key={playerNumber} 
-                                playerNumber={playerNumber} 
+                        <Board playerNumber={playerNumber} 
                                 gameStarted={gameStarted} 
                                 gameEnded={gameEnded}
                                 onGameEnd={this.handleGameEnd}

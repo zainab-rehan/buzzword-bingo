@@ -28,9 +28,16 @@
   font-weight: bold;
 }
 
+.input-group-custom{
+  align-items: center;
+}
+
 .player-input{
-  margin: 5px;
+  margin-left: 50px;
+  margin-top: 5px;;
+  margin-bottom: 5px;
   font-size: 12px !important;
+  max-width: 200px;
 }
 
 .word-display{
@@ -39,4 +46,8 @@
   color: white;
   width:auto;
   margin: 0px !important;
+}
+
+.icon-style{
+  margin: 5px;
 }
