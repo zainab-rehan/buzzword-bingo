@@ -1,16 +1,14 @@
 import React from "react";
 import Square from "../Square/Square";
 import Dictionary from '../Dictionary';
+import './Board.css';
 
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.word);
         this.state = {
             squares: this.generateInitialSquares(),
-            gameEnded: false,
             player: props.playerNumber,
-            gameStarted: props.gameStarted,
             currentWord: props.word
         };
     }
@@ -26,19 +24,21 @@ class Board extends React.Component {
         return squares;
     }
 
-    handleClick(i) {
-        if (this.state.gameEnded) {
-            // If the game has ended, do not handle further clicks
+    handleClick(index) {
+        if (!this.props.gameStarted || this.props.gameEnded) {
+            // If the game has not yet started or has ended, do not handle further clicks
+            console.log("game ended");
             return;
         }
         this.setState(prevState => {
             const squares = [...prevState.squares];
-            if (squares[i].word != this.props.word) {
-                // If the game has ended, do not handle further clicks
+            /*if (squares[i].word !== this.props.word) {
+                // If the clicked word doesnot match the word generator, do not handle further clicks
                 return;
-            }
-            squares[i] = { ...squares[i], clicked: !squares[i].clicked };
-            const winningLine = this.checkForBingo(squares, squares[i]);
+            }*/
+            squares[index] = { ...squares[index], clicked: !squares[index].clicked };
+            const winningLine = this.checkForBingo(squares);
+
             if (winningLine) {
                 const updatedSquares = squares.map((square, index) => {
                     if (winningLine.includes(index)) {
@@ -46,29 +46,18 @@ class Board extends React.Component {
                     }
                     return square;
                 });
-                this.setState({ gameEnded: true });
-                return { squares: updatedSquares };
+                //this.setState({ gameEnded: true });
+                this.props.onGameEnd();
+                return { squares: updatedSquares , gameEnded: true};
             } else {
                 return { squares };
             }
         });
     }
 
-    updateSquare = (index, newWord) => {
-        const squaresCopy = [...this.state.squares];
-        squaresCopy[index] = { ...squaresCopy[index], word: newWord };
-        this.setState({ squares: squaresCopy });
-    };
-
-    renderSquare(i) {
-        /*return (
-            <Square
-                value={this.state.squares[i]}
-                onClick={() => this.handleClick(i)}
-            />
-        );*/
+    renderSquare(index) {
         const { squares } = this.state;
-        const square = squares[i];
+        const square = squares[index];
         const isWinner = square && square.winner;
         const classNames = ["square"];
         if (square && square.clicked) {
@@ -79,43 +68,22 @@ class Board extends React.Component {
         }
         return (
             <Square
-                key={i}
-                value={this.state.squares[i]}
+                key={index}
+                value={this.state.squares[index]}
                 word={square.word}
-                onClick={() => this.handleClick(i)}
+                onClick={() => this.handleClick(index)}
                 className={classNames.join(" ")}
             />
         );
     }
 
     //function to check for bingo
-    checkForBingo(squares,clickedSquare) {
-        //const { squares } = this.state;
+    checkForBingo(squares) {
         const size = Math.sqrt(squares.length);
         
-        /*const lines = [
-            // Rows
-            [0, 1, 2, 3, 4],
-            [5, 6, 7, 8, 9],
-            [10, 11, 12, 13, 14],
-            [15, 16, 17, 18, 19],
-            [20, 21, 22, 23, 24],
-            // Columns
-            [0, 5, 10, 15, 20],
-            [1, 6, 11, 16, 21],
-            [2, 7, 12, 17, 22],
-            [3, 8, 13, 18, 23],
-            [4, 9, 14, 19, 24],
-            // Diagonals
-            [0, 6, 12, 18, 24],
-            [4, 8, 12, 16, 20],
-        ];
-        console.log(lines);
-        */
         // Generate rows
-         // Generate rows
         const lines = [];
-            for (let i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
             const row = [];
             for (let j = 0; j < size; j++) {
                 row.push(i * size + j);
@@ -146,14 +114,10 @@ class Board extends React.Component {
         }
         lines.push(secondaryDiagonal);
 
-        for (let line of lines) {
-            //console.log(line);
+        for (const line of lines) {
             const clickedSquares = line.map(x => squares[x]);
-            //console.log(clickedSquares)
-            //const isBingo = clickedSquares.every(square => square.clicked);
-            const isBingo = clickedSquares.every(square => square && square.clicked);
+            const isBingo = clickedSquares.every(square => square.clicked);
             if (isBingo) {
-                console.log(line);
                 return line;
             }
         }
@@ -161,9 +125,6 @@ class Board extends React.Component {
     }
 
     render() {
-        //this.setState({gameStarted: this.props.gameStarted});
-        const checkh = this.props.gameStarted;
-        const { squares } = this.state;
         const size = 5;
         const rows = Array(size).fill(0).map((_, row) => {
             const columns = Array(size).fill(0).map((_, col) => {
@@ -180,16 +141,14 @@ class Board extends React.Component {
         return (
             <div>
                 <div>
-                {this.state.gameEnded && <h1>Bingo!</h1>}
+                    {this.state.gameEnded && <h1 className="bingo-heading">BINGO!</h1>}
                 </div>
                 <div>
-                {!this.state.gameEnded && <h1>{this.state.player}</h1>}
+                    {!this.state.gameEnded && <h1>{"Player "+this.state.player}</h1>}
                 </div>
                 <div>
-                {rows}
+                    {rows}
                 </div>
-                
-                
             </div>
         );
     }

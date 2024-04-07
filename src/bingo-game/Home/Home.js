@@ -9,7 +9,9 @@ class Home extends React.Component {
         this.state = {
             numPlayers: 2, // Default (min) number of players possible
             gameStarted: false,
+            gameEnded:false,
             word: "",
+            indices:[]
         };
     }
 
@@ -22,33 +24,49 @@ class Home extends React.Component {
         }
     }
 
-    handleStartBtn = (event) => {
-        this.setState({ gameStarted: true }, () => {
-            // Callback function to execute after state is updated
-            console.log("gameStarted state updated:", this.state.gameStarted);
-        });
+    handleStartBtn = () => {
+        this.setState({ gameStarted: true });
         this.generateRandWord();
     }
 
-    handleNextWordBtn = (event) => {
+    handleNextWordBtn = () => {
         this.generateRandWord();
+    }
+
+    handleGameEnd = () => {
+        this.setState({gameEnded: true});
     }
 
     generateRandWord = () => {
-        const dictionaryCopy = [...Dictionary]
-        const randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
-        const word = dictionaryCopy.splice(randomIndex, 1)[0];
+        const dictionaryCopy = [...Dictionary];
+        const indices = this.state.indices;
+
+        let randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
+        
+        //generating a unique random index
+        while(indices.includes(randomIndex))
+        {
+            randomIndex = Math.floor(Math.random() * dictionaryCopy.length);
+        }
+        const newIndices = [...indices, randomIndex];
+        this.setState({ indices: newIndices });
+        
+        const word = dictionaryCopy[randomIndex];
         this.setState({ word: word});
     }
 
     render() {
         const { numPlayers } = this.state;
         const { gameStarted } = this.state;
+        const { gameEnded } = this.state;
         const { word } = this.state;
-        
-        // Generate an array of player numbers based on numPlayers
-        const playerNumbers = Array.from({ length: numPlayers }, (_, index) => index + 1);
 
+        // Generate an array of player numbers based on numPlayers
+        //const playerNumbers = Array.from({ length: numPlayers }, (_, index) => index + 1);
+        const playerNumbers = [];
+        for (let i = 1; i <= numPlayers; i++) {
+            playerNumbers.push(i);
+        }
         //dynamic grid template
         let gridTemplateColumns;
         let gridTemplateRows;
@@ -66,14 +84,19 @@ class Home extends React.Component {
         return(
             <div>
                 <div className="menu-bar row">
-                    <div className="input-group flex-nowrap col">
+                    <div className="input-group col">
                         <label className="player-label">Number of players: </label>
                         <input className="player-input rounded" type="number" value={numPlayers} onChange={this.handleInputChange} disabled={gameStarted}/>
                     </div>
                     <div className="col-auto row">
                         <div className="col">
                             <button className="btn btn-primary custom-btn" onClick={this.handleStartBtn} disabled={gameStarted}>
-                                Start
+                                Start Game
+                            </button>
+                        </div>
+                        <div className="word-gen col">
+                            <button className="btn btn-primary custom-btn" onClick={this.handleNextWordBtn} disabled={!gameStarted}>
+                                Generate Next Word
                             </button>
                         </div>
                         <div className="col">
@@ -86,14 +109,7 @@ class Home extends React.Component {
                 </div>
 
                <div className="game-bar row">
-                <div className="word-display col">
-                    <label>{word}</label>
-                </div>
-                <div className="word-gen col">
-                    <button className="btn btn-primary custom-btn" onClick={this.handleNextWordBtn} disabled={!gameStarted}>
-                        Next Word
-                    </button>
-                </div>
+                <label className="word-display">{word}</label>
                </div>
                 
                 <div style={{ display: 'grid', gridTemplateRows, gridTemplateColumns }}>
@@ -101,6 +117,8 @@ class Home extends React.Component {
                         <Board key={playerNumber} 
                                 playerNumber={playerNumber} 
                                 gameStarted={gameStarted} 
+                                gameEnded={gameEnded}
+                                onGameEnd={this.handleGameEnd}
                                 word={word}
                                 style={{ width: '100%', height: '100%' }}/>
                     ))}

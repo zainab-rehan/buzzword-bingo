@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import React from "react";
-import Board from "./bingo-game/Board/Board";
 import Home from './bingo-game/Home/Home';
 
 function App() {

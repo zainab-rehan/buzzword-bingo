@@ -8,8 +8,8 @@
 .game-bar{
   align-items: center;
   display: flex;
-  background-color: #7a7e87;
-  color: white;
+  margin: 10px;
+  justify-content: center;
 }
 
 .custom-btn{
@@ -19,6 +19,7 @@
     align-items: center;
     display: flex;
     justify-content: right;
+    white-space: nowrap;
 }
 
 .player-label{
@@ -30,4 +31,12 @@
 .player-input{
   margin: 5px;
   font-size: 12px !important;
+}
+
+.word-display{
+  background-color: #9e5dab;
+  border-radius: 10px;
+  color: white;
+  width:auto;
+  margin: 0px !important;
 }
