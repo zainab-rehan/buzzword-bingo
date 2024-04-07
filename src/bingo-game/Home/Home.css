@@ -1,0 +1,23 @@
+.menu-bar{
+    align-items: center;
+    display: flex;
+}
+
+.custom-btn{
+    height: 30px;
+    margin:2px;
+    text-align: center !important;
+    align-items: center;
+    display: flex;
+}
+
+.player-label{
+  margin: 5px;
+  font-size: 12px !important;
+  font-weight: bold;
+}
+
+.player-input{
+  margin: 5px;
+  font-size: 12px !important;
+}
